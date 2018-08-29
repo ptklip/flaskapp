@@ -1,46 +1,52 @@
 #!/usr/bin/python3
-'''
+"""
 Test Flask
 
-'''
+"""
 
-from flask import Flask, render_template
-from werkzeug.serving import run_simple
+import logging
+import sys
+
 import psycopg2 as pg
+from flask import Flask
+
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 app = Flask(__name__)
 
+def pg_conn(sql_in):
+    """Create a PostgreSQL database connection."""
+    print("sql_in = " + sql_in)
+    sql = sql_in
+    # Use environment variables here.
+    conn = pg.connect("dbname=flaskapp user=peter")
+    #print("conn = " + str(conn))
+    cur = conn.cursor()
+    #print("cur = " + str(cur)
+    #cur.execute(sql)
+    cur.execute(sql)
+
+    return cur
 
 @app.route("/")
 def index():
-
-    conn = pg.connect("dbname=flaskapp user=peter")
-
-    cur = conn.cursor()
-    '''Create a PostgreSQL database connection.'''
-
-    output = "\nPostgreSQL database version:\n\n"
-
-    sql = "SELECT version()"
-    cur.execute(sql)
-
-    # Display the PostgreSQL database server version.
-    db_version = str(cur.fetchone())
-    output += db_version
-
-    # close the connection.
-    cur.close()    
-
-    end = "\nThe Flask app responded ok.\n\n"
-    output += end
-    return output
+    return "\nThe Flask app responded ?.\n\n"
 
 @app.route('/<name>')
 def hello_name(name):
-    return "\nWelcome, {}.\n\n".format(name)
+    #return "\nWelcome, {}.\n\n".format(name)
+    n = name
+    sql = "select * from users where name = '" + n + "'"
+    #sql = "select * from users where name = 'Penny'"
+    #sql = "select * from users"
+    print(sql)
+    cur = pg_conn(sql)
+    row_count = 0
+    for row in cur:
+        row_count += 1
+        print("row: %s    %s\n" % (row_count, row))
+    
+    return "ok"
 
-
-if __name__ == "__main__":
-    run_simple('0.0.0.0', 5000, app)
-
-
+if __name__ == '__main__':
+    app.run()
