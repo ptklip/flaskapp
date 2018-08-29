@@ -10,31 +10,30 @@ import psycopg2 as pg
 
 app = Flask(__name__)
 
-def pg_conn():
+
+@app.route("/")
+def index():
+
     conn = pg.connect("dbname=flaskapp_dev user=peter")
 
     cur = conn.cursor()
     '''Create a PostgreSQL database connection.'''
 
-    print('\nPostgreSQL database version:')
+    output = "\nPostgreSQL database version:\n\n"
 
     sql = "SELECT version()"
     cur.execute(sql)
 
     # Display the PostgreSQL database server version.
-    db_version = cur.fetchone()
-    print(db_version)
+    db_version = str(cur.fetchone())
+    output += db_version
 
     # close the connection.
-    cur.close()
+    cur.close()    
 
-
-@app.route("/")
-def root():
-
-    txt = pg_conn()    
-
-    return "\nThe Flask app responded ok.\n\n"
+    end = "\nThe Flask app responded ok.\n\n"
+    output += end
+    return output
 
 @app.route('/<name>')
 def hello_name(name):
@@ -43,3 +42,5 @@ def hello_name(name):
 
 if __name__ == "__main__":
     run_simple('0.0.0.0', 5000, app)
+
+
