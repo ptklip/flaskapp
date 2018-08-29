@@ -14,7 +14,7 @@ app = Flask(__name__)
 @app.route("/")
 def index():
 
-    conn = pg.connect("dbname=flaskapp_dev user=peter")
+    conn = pg.connect("dbname=flaskapp user=peter")
 
     cur = conn.cursor()
     '''Create a PostgreSQL database connection.'''
