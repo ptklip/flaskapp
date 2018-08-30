@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
-# coding: utf-8
+# -*- coding: utf-8 -*-
+
 """Use the records Python library to interact with a PostgreSQL database.
 # https://github.com/kennethreitz/records
 """
-
 import os
 import records
 

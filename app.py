@@ -1,52 +1,39 @@
-#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 """
-Test Flask
+Flask Application
+
+Move data in and out of a PostgreSQL database.
 
 """
 
-import logging
-import sys
-
-import psycopg2 as pg
+import os
+import records
+#import psycopg2 as pg
 from flask import Flask
 
-logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 app = Flask(__name__)
 
-def pg_conn(sql_in):
-    """Create a PostgreSQL database connection."""
-    print("sql_in = " + sql_in)
-    sql = sql_in
-    # Use environment variables here.
-    conn = pg.connect("dbname=flaskapp user=peter")
-    #print("conn = " + str(conn))
-    cur = conn.cursor()
-    #print("cur = " + str(cur)
-    #cur.execute(sql)
-    cur.execute(sql)
+def pg_conn():
+    # Gets environment variable DATABASE_URL from the pipenv .env file
+    # when the environment is activated with 'pipenv shell' or 'pipenv run'
+    DATABASE_URL=os.environ['DATABASE_URL']
 
-    return cur
+    db = records.Database(DATABASE_URL)
+    rows = db.query("SELECT * FROM users")
+
+    for r in rows:
+        print("Name: {}\tThing: {}".format(r.name, r.thing))
+
 
 @app.route("/")
 def index():
-    return "\nThe Flask app responded ?.\n\n"
+    return "\nThe Flask app responded ok.\n\n"
 
 @app.route('/<name>')
 def hello_name(name):
-    #return "\nWelcome, {}.\n\n".format(name)
-    n = name
-    sql = "select * from users where name = '" + n + "'"
-    #sql = "select * from users where name = 'Penny'"
-    #sql = "select * from users"
-    print(sql)
-    cur = pg_conn(sql)
-    row_count = 0
-    for row in cur:
-        row_count += 1
-        print("row: %s    %s\n" % (row_count, row))
+    return "\nWelcome, {}.\n\n".format(name)
     
-    return "ok"
 
 if __name__ == '__main__':
     app.run()
