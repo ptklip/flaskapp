@@ -28,6 +28,9 @@ def pg_conn():
 
 @app.route("/")
 def index():
+    # Call pg_conn as a test to see if the DB conn is working.
+    # It is. The query result prints to the terminal in debug mode.
+    pg_conn()
     return "\nThe Flask app responded ok.\n\n"
 
 @app.route('/<name>')
