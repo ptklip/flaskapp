@@ -20,7 +20,7 @@ def pg_conn():
     for r in rows:
         print("Username: {}\tThing: {}".format(r.username, r.thing))
 
-    # return 1
+    
 
 
 

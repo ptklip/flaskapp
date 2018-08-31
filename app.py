@@ -8,8 +8,6 @@ Move data around in a PostgreSQL database.
 
 from pg import pg_conn
 import os
-import records
-import psycopg2 as pg
 from flask import Flask
 
 
