@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "720eddf99dfcae6c78dc1d9073e3bfa1e1dd51e98e28d72f1a32d6fde9058d3f"
+            "sha256": "d8780c38a70fb7b0203053b806fd37d01ef8c3d1f420b1d0fd54297503998412"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -98,9 +98,9 @@
         },
         "openpyxl": {
             "hashes": [
-                "sha256:0f391b0035d7c98f25aad539726e8efc77eea250ff1a120ea7d264c03a16f5fe"
+                "sha256:04091e034911a0afc531c3a15e5ae0b1b6a43654dbf63c187f47d20cdfefac1c"
             ],
-            "version": "==2.5.5"
+            "version": "==2.5.6"
         },
         "psycopg2": {
             "hashes": [
@@ -137,6 +137,14 @@
             ],
             "index": "pypi",
             "version": "==2.7.5"
+        },
+        "python-dotenv": {
+            "hashes": [
+                "sha256:122290a38ece9fe4f162dc7c95cae3357b983505830a154d3c98ef7f6c6cea77",
+                "sha256:4a205787bc829233de2a823aa328e44fd9996fedb954989a21f1fc67c13d7a77"
+            ],
+            "index": "pypi",
+            "version": "==0.9.1"
         },
         "pyyaml": {
             "hashes": [

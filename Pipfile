@@ -8,6 +8,7 @@ requests = "*"
 flask = "*"
 "psycopg2" = "*"
 records = "*"
+python-dotenv = "*"
 
 [dev-packages]
 pylint = "*"

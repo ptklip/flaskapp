@@ -1,21 +1,26 @@
+# -*- coding: utf-8 -*-
+"""
+pg.py
+
+PostgreSQL database functions.
+
+"""
+import os
+import records
 import psycopg2 as pg
 
-# The following connection paramters, just dbname and user, work when
-# PostgreSQL acess is set to 'trust' for local connections.
-conn = pg.connect("dbname=flaskapp_dev user=peter")
+def pg_conn():
+    # Gets environment variable DATABASE_URL from the pipenv .env file
+    # when the environment is activated with 'pipenv shell' or 'pipenv run'
+    DATABASE_URL=os.environ['DATABASE_URL']
 
-cur = conn.cursor()
+    db = records.Database(DATABASE_URL)
+    rows = db.query("SELECT username, thing FROM users")
 
-# Execute a statement
-print('\nPostgreSQL database version:')
+    for r in rows:
+        print("Username: {}\tThing: {}".format(r.username, r.thing))
 
-sql = "SELECT version()"
-cur.execute(sql)
+    # return 1
 
-# display the PostgreSQL database server version
-db_version = cur.fetchone()
-print(db_version)
 
-# close the communication with the PostgreSQL
-cur.close()
 
