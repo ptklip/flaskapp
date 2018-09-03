@@ -1,22 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2>Index.html content</h2>
-    <table border='1'>
-    <thead>
-        <tr>
-            {% for col in colnames %}
-            <th>{{ col }}</th>
-            {% endfor %}
-        </tr>
-    </thead>
-    {% for record in recordset %}
-    <tr>
-        {% for col in colnames %}
-            <td>{{ record[col] }}</td>
-        {% endfor %}
-    </tr>
-    {% endfor %}
-    </table>
+    <h2>Welcome</h2>
+    
+    <p>This is a Flask application.</p>
     
 {% endblock %}
