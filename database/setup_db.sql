@@ -1,31 +1,47 @@
+-- Be sure to set timezone to UTC in postgresql.conf, then restart the server
 -- Create the database objects for the application.
+-- As user postgres:
+
+/*
+  For good security, passwords will have to have a random salt plus password.
+  To enable this functionality, add the pgcrypto extension.
+  https://www.postgresql.org/docs/current/static/pgcrypto.html
+*/
+
+CREATE EXTENSION pgcrypto;
+
+CREATE ROLE flaskapp_user CREATEDB;
+
+ALTER ROLE flaskapp_user WITH LOGIN;
 
 DROP DATABASE IF EXISTS flaskapp;
 
 CREATE DATABASE flaskapp;
 
--- For good security, passwords will have to have a random salt plus password.
--- https://www.postgresql.org/docs/current/static/pgcrypto.html
-
-CREATE EXTENSION pgcrypto;
+/*
+Set password for user: psql# \password flaskapp_user
+Run as user flaskapp_user:
+psql -d flaskapp -U flaskapp_user
+Then connect to the flaskapp database:
+\c flaskapp
+*/
 
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users
 (
     id              SERIAL,
-    username        VARCHAR(100) NOT NULL,
-    first_name      VARCHAR(100),
-    last_name       VARCHAR(100),
-    email_address   VARCHAR(100) NOT NULL,
-    phone_number    VARCHAR(50),
-    user_status     TINYINT NOT NULL, -- Active, disabled, deactivated - linking to a status table
-    password_salt   VARCHAR(128), -- Unique for every user, inserted when the account is created.
-    user_password   VARCHAR(128), -- (Hashed with the salt - SHA256, SHA512, RipeMD, or WHIRLPOOL)
-    created_at      TIMESTAMP WITH TIME ZONE NOT NULL,
-    deactivated_at  TIMESTAMP WITH TIME ZONE
-);
+    username        TEXT NOT NULL,
+    first_name      TEXT,
+    last_name       TEXT,
+    email           TEXT NOT NULL,
+    phone           TEXT,
+    user_status     TEXT NOT NULL, -- active, locked, inactive
+    user_password   TEXT NOT NULL,
+    start_time      TIMESTAMP WITH TIME ZONE NOT NULL
+ );
 
+CREATE UNIQUE INDEX users_username_unique_idx ON users (username);
 
 DROP TABLE IF EXISTS dim_date;
 
@@ -34,20 +50,20 @@ CREATE TABLE dim_date
     date_dim_id              INT NOT NULL,
     date_actual              DATE NOT NULL,
     epoch                    BIGINT NOT NULL,
-    day_suffix               VARCHAR(4) NOT NULL,
-    day_name                 VARCHAR(9) NOT NULL,
+    day_suffix               TEXT NOT NULL,
+    day_name                 TEXT NOT NULL,
     day_of_week              INT NOT NULL,
     day_of_month             INT NOT NULL,
     day_of_quarter           INT NOT NULL,
     day_of_year              INT NOT NULL,
     week_of_month            INT NOT NULL,
     week_of_year             INT NOT NULL,
-    week_of_year_iso         CHAR(10) NOT NULL,
+    week_of_year_iso         TEXT NOT NULL,
     month_actual             INT NOT NULL,
-    month_name               VARCHAR(9) NOT NULL,
-    month_name_abbreviated   CHAR(3) NOT NULL,
+    month_name               TEXT NOT NULL,
+    month_name_abbreviated   TEXT NOT NULL,
     quarter_actual           INT NOT NULL,
-    quarter_name             VARCHAR(9) NOT NULL,
+    quarter_name             TEXT NOT NULL,
     year_actual              INT NOT NULL,
     first_day_of_week        DATE NOT NULL,
     last_day_of_week         DATE NOT NULL,
@@ -57,12 +73,12 @@ CREATE TABLE dim_date
     last_day_of_quarter      DATE NOT NULL,
     first_day_of_year        DATE NOT NULL,
     last_day_of_year         DATE NOT NULL,
-    mmyyyy                   CHAR(6) NOT NULL,
-    mmddyyyy                 CHAR(10) NOT NULL,
+    mmyyyy                   TEXT NOT NULL,
+    mmddyyyy                 TEXT NOT NULL,
     weekend_indr             BOOLEAN NOT NULL
 );
 
-ALTER TABLE dw.dim_date ADD CONSTRAINT dim_date_date_dim_id_pk PRIMARY KEY (date_dim_id);
+ALTER TABLE dim_date ADD CONSTRAINT dim_date_date_dim_id_pk PRIMARY KEY (date_dim_id);
 
 CREATE INDEX dim_date_date_actual_idx
   ON dim_date(date_actual);

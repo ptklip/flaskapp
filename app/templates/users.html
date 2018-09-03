@@ -1,0 +1,10 @@
+{% extends "index.html" %}
+
+{% block users %}
+    <h1>Users</h1>
+
+    {% for r in recordset %}
+        <div><p>{{ r }} </p></div>
+    {% endfor %}
+    
+{% endblock %}

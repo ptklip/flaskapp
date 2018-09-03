@@ -1,6 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Index.html content, included in base.html</h1>
+    <h2>Index.html content</h2>
+    <table border='1'>
+    <thead>
+        <tr>
+            {% for col in colnames %}
+            <th>{{ col }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    {% for record in recordset %}
+    <tr>
+        {% for col in colnames %}
+            <td>{{ record[col] }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </table>
     
 {% endblock %}
