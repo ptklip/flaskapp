@@ -7,7 +7,7 @@
       {% endif %}
     </head>
     <body>
-        <div>Flask Application: <a href="/index">Home</a></div>
+        <div>Flask Application: <a href="{{ url_for('index') }}">Home</a></div>
         <hr>
         {% block content %}{% endblock %}
     </body>
