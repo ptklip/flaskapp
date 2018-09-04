@@ -4,6 +4,7 @@ INSERT INTO notes (note)
 VALUES
 ('Pick up hot dogs and buns.'),
 ('Run the pool filter.')
+;
 
 
 -- Users

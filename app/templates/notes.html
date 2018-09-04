@@ -14,13 +14,13 @@
   </form>
 
   <table border='1' cellpadding='8'>
+  
   {% for record in recordset %}
     <tr>
-    {% for col in colnames %}
-      <td>{{ record[col] }}</td>
-    {% endfor %}
+        <td>{{record[0]}}</td>
     </tr>
   {% endfor %}
   </table>
+  
 </div>
 {% endblock %}

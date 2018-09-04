@@ -29,30 +29,38 @@ def users():
     db = records.Database(DATABASE_URL)
     username = 'johndoe'
 
+    # sql =   """ 
+    #         SELECT username, first_name, last_name, email, phone, user_status, start_time 
+    #         FROM users
+    #         WHERE username = '{}'
+    #         """.format(
+    #         username)
+
     sql =   """ 
-            SELECT username, first_name, last_name, email, phone, user_status, start_time 
+            SELECT username, first_name, last_name, email, phone, user_status, DATE(start_time) 
             FROM users
-            WHERE username = '{}'
-            """.format(
-            username)
+            """
+
+    # sql = 'SELECT * from users'
 
     # How do I handle it if there are no records?
-    rows = db.query(sql, (username))
-
-    print(sql)
-
-    for r in rows:
-        colnames = r.keys()
+    rows = db.query(sql)
     
-    return render_template('users.html', recordset=rows, colnames=colnames)
+    print('SQL:')
+    print(sql)
+    print('rows:')
+    print(rows)
+
+    # for r in rows:
+    #     colnames = r.keys()
+    
+    return render_template('users.html', title='Users', recordset=rows)
 
 
 ## Make a page that lets me enter data in a simple table.
 @flaskapp.route('/notes', methods=["GET", "POST"])
 def notes():
     form = NotesForm()
-
-    
 
     DATABASE_URL=os.environ['DATABASE_URL']
     db = records.Database(DATABASE_URL)
@@ -85,10 +93,14 @@ def notes():
     select_sql ="""
             SELECT note FROM notes
             """
+    print(select_sql)
 
     rows = db.query(select_sql)
+    # db.close()
 
-    for r in rows:
-        colnames = r.keys()
+    # for r in rows:
+    #     colnames = r.keys()
+    #     values = r.values()
+    #     print(colnames, values)
     
-    return render_template('notes.html', title='Notes', form=form, recordset=rows, colnames=colnames)
+    return render_template('notes.html', title='Notes', form=form, recordset=rows)

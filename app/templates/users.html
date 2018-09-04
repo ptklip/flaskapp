@@ -2,23 +2,46 @@
 
 {% block content %}
 <div class="container">
-    <h2>Users</h2>
+  <h2>Users</h2>
 
-    <table border='1' cellpadding='8'>
+  <table border='1' cellpadding='8'>
+    <thead>
+      <tr>
         <thead>
-            <tr>
-            {% for col in colnames %}
-            <th>{{ col }}</th>
-            {% endfor %}
-            </tr>
-        </thead>
+        <th>User Name</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Status</th>
+        <th>Start Time</th>
+      </tr>
+    </thead>
+      
+        
+  {% for record in recordset %}
+  <tr>
+      <td>{{record[0]}}</td>
+      <td>{{record[1]}}</td>
+      <td>{{record[2]}}</td>
+      <td>{{record[3]}}</td>
+      <td>{{record[4]}}</td>
+      <td>{{record[5]}}</td>
+      <td>{{record[6]}}</td>
+  </tr>
+  {% endfor %}
+  </table>
+
+
+
+<!-- <table border='1' cellpadding='8'>
         {% for record in recordset %}
-        <tr>
-            {% for col in colnames %}
-                <td>{{ record[col] }}</td>
-            {% endfor %}
-        </tr>
+          <tr>
+          {% for col in colnames %}
+            <td>{{ record[col] }}</td>
+          {% endfor %}
+          </tr>
         {% endfor %}
-    </table>
-</div>   
+        </table>
+</div>    -->
 {% endblock %}
