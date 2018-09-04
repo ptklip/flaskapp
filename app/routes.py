@@ -7,6 +7,7 @@ from flask import (
 from app import flaskapp
 import os
 import records
+import json
 from app.forms import LoginForm, NotesForm # Be sure to import each form you define in forms.py.
 
 @flaskapp.route('/')
@@ -56,15 +57,22 @@ def notes():
     DATABASE_URL=os.environ['DATABASE_URL']
     db = records.Database(DATABASE_URL)
 
+    # Let the user enter a new note into the database.
     if request.method == 'POST':
         note = request.form['note']
         #note = 'Test'
 
+        # $$: Dollar quoting:
+        # https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-SYNTAX-DOLLAR-QUOTING
+        # Allows single quotes in an insert.
+        ### Make sure no SQL injection, though.
         insert_sql ="""
-                INSERT INTO notes (note) VALUES ('{}')
+                INSERT INTO notes (note) VALUES ($${}$$)
                 """.format(
                 note)
+        
         print(insert_sql)
+        #print(json.dumps(insert_sql))
 
         ### Prevent 'None' from being entered into the database. The user needs to add input before submitting.
         db.query(insert_sql)
@@ -73,8 +81,9 @@ def notes():
         if form.validate_on_submit():
             return redirect(url_for('notes'))
 
+    # Display the existing notes from the database.
     select_sql ="""
-            SELECT note AS Notes FROM notes
+            SELECT note FROM notes
             """
 
     rows = db.query(select_sql)
