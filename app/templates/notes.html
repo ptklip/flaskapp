@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Notes</h2>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.note.label }}<br>
+            {{ form.note(size=60) }}
+        </p>
+       
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <table border='1' cellpadding='8'>
+            <thead>
+                <tr>
+                  <th>Notes</th>
+                </tr>
+            </thead>
+            {% for record in recordset %}
+            <tr>
+                {% for col in colnames %}
+                    <td>{{ record[col] }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+</div>
+{% endblock %}

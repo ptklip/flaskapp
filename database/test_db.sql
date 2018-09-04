@@ -1,5 +1,11 @@
 -- Insert test data.
 
+INSERT INTO notes (note)
+VALUES
+('Pick up hot dogs and buns.'),
+('Run the pool filter.')
+
+
 -- Users
 INSERT INTO users (username, first_name, last_name, email, phone, user_status, user_password, start_time)
 VALUES ('johndoe', 'John', 'Doe', 'johndoe@mail.com', '5555551212', 'active', crypt('johnspassword', gen_salt('bf')), now());

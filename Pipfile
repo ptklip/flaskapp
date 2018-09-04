@@ -11,6 +11,7 @@ records = "*"
 python-dotenv = "*"
 flask-wtf = "*"
 flask-login = "*"
+flask-bootstrap = "*"
 
 [dev-packages]
 pylint = "*"

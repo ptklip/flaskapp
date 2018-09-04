@@ -26,6 +26,14 @@ Then connect to the flaskapp database:
 \c flaskapp
 */
 
+-- Table for testing database inserts in Flask
+DROP TABLE IF EXISTS notes;
+
+CREATE TABLE notes (
+    id      SERIAL,
+    note    TEXT
+);
+
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users

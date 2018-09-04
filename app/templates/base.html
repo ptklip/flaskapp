@@ -1,5 +1,13 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
+      
+        
+
       {% if title %}
       <title>{{ title }} - Flask Application</title>
       {% else %}
@@ -7,11 +15,19 @@
       {% endif %}
     </head>
     <body>
-        <div>
-            <a href="{{ url_for('index') }}">Home</a> |
-            <a href="{{ url_for('users') }}">Users</a>
+           
+        <div class="container">
+        <div class="navbar-header">
+        <a href="{{ url_for('index') }}">Home</a> |
+        <a href="{{ url_for('users') }}">Users</a> |
+        <a href="{{ url_for('notes') }}">Notes</a>
         </div>
-        <hr>
+        </div>
+        
         {% block content %}{% endblock %}
+
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/popper.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
     </body>
 </html>
