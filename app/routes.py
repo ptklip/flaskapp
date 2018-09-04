@@ -20,10 +20,20 @@ def login():
 def users():
     DATABASE_URL=os.environ['DATABASE_URL']
     db = records.Database(DATABASE_URL)
-    sql = """SELECT username, first_name, last_name, email, phone, user_status, start_time 
-            FROM users"""
-    rows = db.query(sql)
+    username = 'johndoe'
+    
+    sql =   """ 
+            SELECT username, first_name, last_name, email, phone, user_status, start_time 
+            FROM users
+            WHERE username = '{}'
+            """.format(username)
 
+    
+    rows = db.query(sql, (username))
+
+    print(sql)
+
+    
     for r in rows:
         colnames = r.keys()
     return render_template('users.html', recordset=rows, colnames=colnames)
