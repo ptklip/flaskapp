@@ -3,14 +3,14 @@
 {% block content %}
 <div class="container">
     <h2>Notes</h2>
-    <form action="" method="post" novalidate>
+    <form action="" method="post" id="notesForm" novalidate>
         {{ form.hidden_tag() }}
         <p>
             {{ form.note.label }}<br>
             {{ form.note(size=60) }}
         </p>
        
-        <p>{{ form.submit() }}</p>
+        <p>{{ form.submit() }} </p>
     </form>
 
     <table border='1' cellpadding='8'>
@@ -28,4 +28,14 @@
             {% endfor %}
         </table>
 </div>
+<script>
+    function submitForm() {
+       // Get the first form with the name
+       //document.getElementById("notesForm").reset();
+       var frm = document.getElementsById('notesForm')[0];
+       frm.submit(); // Submit
+       frm.reset();  // Reset
+       return false; // Prevent page refresh
+    }
+</script>
 {% endblock %}

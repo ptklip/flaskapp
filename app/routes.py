@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, render_template, request
+from flask import (
+  Flask, render_template, request, flash, redirect, url_for, session
+)
+#from flask import Flask, render_template, request
 from app import flaskapp
 import os
 import records
@@ -47,6 +50,9 @@ def users():
 @flaskapp.route('/notes', methods=["GET", "POST"])
 def notes():
     form = NotesForm()
+
+    
+
     DATABASE_URL=os.environ['DATABASE_URL']
     db = records.Database(DATABASE_URL)
 
@@ -62,6 +68,10 @@ def notes():
 
         ### Prevent 'None' from being entered into the database. The user needs to add input before submitting.
         db.query(insert_sql)
+
+        # Redirect so the user see an empty form after submitting a note.
+        if form.validate_on_submit():
+            return redirect(url_for('notes'))
 
     select_sql ="""
             SELECT note AS Notes FROM notes
