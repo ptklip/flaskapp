@@ -1,12 +1,20 @@
+# -*- coding: utf-8 -*-
+
 from flask import Flask, render_template
 from app import flaskapp
 import os
 import records
+from app.forms import LoginForm
 
 @flaskapp.route('/')
 @flaskapp.route('/index')
 def index():
     return render_template('index.html')
+
+@flaskapp.route('/login')
+def login():
+    form = LoginForm()
+    return render_template('login.html', title='Sign In', form=form)
 
 @flaskapp.route('/users')
 def users():
