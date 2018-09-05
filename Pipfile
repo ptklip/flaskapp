@@ -12,6 +12,10 @@ python-dotenv = "*"
 flask-wtf = "*"
 flask-login = "*"
 flask-bootstrap = "*"
+pyodbc = "*"
+"beautifulsoup4" = "*"
+lxml = "*"
+pandas = "*"
 
 [dev-packages]
 pylint = "*"

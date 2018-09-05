@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <h2>ETL Jobs</h2>
+  <table border='1' cellpadding='8'>
+      <thead>
+        <tr>
+          <thead>
+          <th>Job Name</th>
+          <th>Job Description</th>
+          <th>Last Run Time</th>
+          <th>Last Run Status</th>
+        </tr>
+      </thead>
+        
+    {% for record in recordset %}
+    <tr>
+      <td>{{record[0]}}</td>
+      <td>{{record[1]}}</td>
+      <td>{{record[2]}}</td>
+      <td>{{record[3]}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+  
+</div>
+{% endblock %}

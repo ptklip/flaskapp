@@ -5,6 +5,9 @@ from flask import (
 )
 import os
 import records
+#https://docs.python.org/3/howto/logging-cookbook.html
+import logging
+#import auxiliary_module -- Caused error. What is this module?
 from app import flaskapp
 from app.forms import LoginForm, NotesForm # Import each form defined in forms.py.
 
@@ -20,7 +23,6 @@ def index():
 
 @flaskapp.route('/login', methods=['GET', 'POST'])
 def login():
-    """Logic for the login page."""
     form = LoginForm()
 
     if request.method == 'POST':
@@ -52,12 +54,12 @@ def login():
 @flaskapp.route("/logout")
 def logout():
     session['logged_in'] = False
+    
     print('session.get("logged_in") = ', session.get('logged_in'))
     flash('You have logged out.')
     return render_template('index.html', form=LoginForm())  
 
 @flaskapp.route('/users')
-
 def users():
     # Login required
     if not session.get('logged_in'):
@@ -80,13 +82,13 @@ def users():
             """
 
     rows = db.query(sql)
-    
-    return render_template('users.html', title='Users', recordset=rows)
 
+      
+    return render_template('users.html', title='Users', recordset=rows)
 
 @flaskapp.route('/notes', methods=['GET', 'POST'])
 def notes():
-    """Logic for the notes page."""
+    form=NotesForm()
     if not session.get('logged_in'):
         flash('Please log in to view that page.')
         return render_template('login.html', form=LoginForm())
@@ -118,3 +120,15 @@ def notes():
     rows = db.query(select_sql)
     
     return render_template('notes.html', title='Notes', form=NotesForm(), recordset=rows)
+
+@flaskapp.route('/etl')
+def etl():
+    if not session.get('logged_in'):
+        flash('Please log in to view that page.')
+        return render_template('login.html', form=LoginForm())
+    
+    sql ="""
+            SELECT job_name, job_description , last_run_time , last_run_status FROM etl_jobs
+            """
+    rows = db.query(sql)
+    return render_template('etl.html', recordset=rows)

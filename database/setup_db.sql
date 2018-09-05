@@ -47,7 +47,7 @@ CREATE TABLE users
     user_status     TEXT NOT NULL, -- active, locked, inactive
     user_password   TEXT NOT NULL,
     start_time      TIMESTAMP WITH TIME ZONE NOT NULL
- );
+);
 
 CREATE UNIQUE INDEX users_username_unique_idx ON users (username);
 
@@ -58,7 +58,61 @@ CREATE TABLE roles
     id          SERIAL,
     role_name   TEXT NOT NULL,
     user_id     INT NOT NULL     
- );
+);
+
+DROP TABLE IF EXISTS etl_jobs;
+
+CREATE TABLE etl_jobs (
+    id              SERIAL,
+    job_name        TEXT,
+    job_description TEXT,
+    last_run_time   TIMESTAMP WITH TIME ZONE,
+    last_run_status TEXT -- success, failure
+);
+
+DROP TABLE IF EXISTS etl_job_schedule;
+
+CREATE TABLE etl_job_schedule (
+    id          SERIAL,
+    job_id      INT
+    frequency   TEXT,
+    weekdays    BOOLEAN,
+    weekends    BOOLEAN,
+    holidays    BOOLEAN
+);
+
+DROP TABLE IF EXISTS batting_stats_current_season;
+
+CREATE TABLE batting_stats_current_season (
+    id                          SERIAL,
+    position                    TEXT,
+    player_name                 TEXT,
+    age                         INT,
+    games_played                INT,
+    plate_appearences           INT,
+    at_bats                     INT,
+    runs_scored                 INT,
+    hits                        INT,
+    doubles                     INT,
+    triples                     INT,
+    home_runs                   INT,
+    runs_batted_in              INT,
+    stolen_bases                INT,
+    caught_stealing             INT,
+    bases_on_balls              INT,
+    strike_outs                 INT,
+    batting_average             NUMERIC (8, 3),
+    on_base_percentage          NUMERIC (8, 3),
+    slugging_percentage         NUMERIC (8, 3),
+    on_base_plus_slugging       NUMERIC (8, 3),
+    on_base_percentage_plus     NUMERIC (8, 3),
+    total_bases                 INT,
+    grounded_into_double_play   INT,
+    hit_by_pitch                INT,
+    sacrifice_hits              INT,
+    sacrifice_flies             INT,
+    intentional_bases_on_balls  INT
+);
 
 DROP TABLE IF EXISTS dim_date;
 

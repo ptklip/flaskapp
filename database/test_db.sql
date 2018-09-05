@@ -19,6 +19,25 @@ WHERE username = 'johndoe' AND user_password = crypt('johnspassword', user_passw
 
 -- Change the password.
 UPDATE users
-SET user_password = crypt('johnsnewpassword', user_password)
+SET user_password = crypt('john', user_password)
 WHERE username = 'johndoe';
+
+-- Roles
+INSERT INTO roles (role_name, user_id)
+VALUES ('admin', 1);
+
+-- ETL Jobs
+INSERT INTO etl_jobs (job_name, job_description, last_run_time, last_run_status)
+VALUES ('red_sox_team_batting_stats', 'Get Red Sox team batting stats from baseball-reference.com and insert into PostgreSQL', now(), 'success');
+
+-- ETL Job Schedule
+INSERT INTO etl_job_schedule (job_id, frequency, weekdays, weekends, holidays)
+VALUES (1, 'daily', '1', '1', '1');
+
+-- Batting Stats Current Season
+INSERT INTO batting_stats_current_season (position, player_name, age, games_played, plate_appearences, at_bats, runs_scored, hits, doubles,                     INT,
+    triples, home_runs, runs_batted_in, stolen_bases, caught_stealing, bases_on_balls, strike_outs, batting_average, on_base_percentage,
+    slugging_percentage, on_base_plus_slugging, on_base_percentage_plus, total_bases, grounded_into_double_play, hit_by_pitch, sacrifice_hits,              INT,
+    sacrifice_flies, intentional_bases_on_balls)
+VALUES ('C', 'Sandy Leon', 29, 78, 258, 235, 29, 45, 11, 0, 5, 21, 1, 0, 15, 64, .191, .251, .302, .553, 49, 71, 5, 4, 3, 1, 0);
 
