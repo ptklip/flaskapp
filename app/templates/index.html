@@ -3,8 +3,20 @@
 {% block content %}
     
     <div class="container">
-      <h2>Welcome</h2>
-      <p>This is a Flask application.</p>
+      <br/>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class=flashes>
+        {% for message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+        </div>
+        {% endif %}
+      {% endwith %}
+
+      <h2>A Modest Data-Driven Web Application</h2>
+
+      <p>Built with Python Flask.</p>
     </div>
     
 {% endblock %}

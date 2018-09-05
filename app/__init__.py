@@ -5,7 +5,8 @@ from flask import (
 
 import os
 
-flaskapp = Flask(__name__)
+#flaskapp = Flask(__name__)
+flaskapp = Flask(__name__.split('.')[0])
 
 from app import routes
 

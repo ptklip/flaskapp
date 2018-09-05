@@ -51,6 +51,15 @@ CREATE TABLE users
 
 CREATE UNIQUE INDEX users_username_unique_idx ON users (username);
 
+DROP TABLE IF EXISTS roles;
+
+CREATE TABLE roles
+(
+    id          SERIAL,
+    role_name   TEXT NOT NULL,
+    user_id     INT NOT NULL     
+ );
+
 DROP TABLE IF EXISTS dim_date;
 
 CREATE TABLE dim_date

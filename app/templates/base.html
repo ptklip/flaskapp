@@ -1,34 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-      <!-- Required meta tags -->
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
-      
-        
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{{ url_for('static', filename='css/bootstrap.css') }}" rel="stylesheet">
 
-      {% if title %}
-      <title>{{ title }} - Flask Application</title>
-      {% else %}
-      <title>Welcome to a Flask Application</title>
-      {% endif %}
-    </head>
-    <body>
-           
-        <div class="container">
-        <div class="navbar-header">
+    {% if title %}
+    <title>{{ title }} - Flask Application</title>
+    {% else %}
+    <title>Welcome to a Flask Application</title>
+    {% endif %}
+  </head>
+  <body>
+    <div class="container">
+      <div class="navbar-header">
         <a href="{{ url_for('index') }}">Home</a> |
         <a href="{{ url_for('users') }}">Users</a> |
         <a href="{{ url_for('notes') }}">Notes</a> |
-        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('login') }}">Login</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
         </div>
-        </div>
-        
-        {% block content %}{% endblock %}
+    </div>
+      
+    {% block content %}{% endblock %}
 
-        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/popper.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
-    </body>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/popper.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  </body>
 </html>

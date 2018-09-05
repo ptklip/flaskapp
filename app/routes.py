@@ -1,66 +1,72 @@
 # -*- coding: utf-8 -*-
 
 from flask import (
-  Flask, render_template, request, flash, redirect, url_for, session
+  Flask, g, request, redirect, url_for, render_template, flash, session
 )
-from app import flaskapp
 import os
 import records
-from app.forms import LoginForm, NotesForm # Be sure to import each form you define in forms.py.
+from app import flaskapp
+from app.forms import LoginForm, NotesForm # Import each form defined in forms.py.
+
+DATABASE_URL=os.environ['DATABASE_URL']
+db = records.Database(DATABASE_URL)
 
 @flaskapp.route('/')
 @flaskapp.route('/index')
 def index():
+    """Logic for the index page."""
+    print('session.get("logged_in") = ', session.get('logged_in'))
     return render_template('index.html')
 
 @flaskapp.route('/login', methods=['GET', 'POST'])
 def login():
+    """Logic for the login page."""
     form = LoginForm()
 
-    DATABASE_URL=os.environ['DATABASE_URL']
-    db = records.Database(DATABASE_URL)
-    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
 
-        print('method is POST')
-        print('username: ', username, 'password: ', password)
+        # print('username: ', username, 'password: ', password)
 
-        sql =   """ 
+        sql =""" 
             SELECT username, user_password 
             FROM users
             WHERE username = $${}$$ AND user_password = crypt('{}', user_password);
             """.format(
             username, password)
-            
-        print(sql)
+        # print(sql)
 
         row = db.query(sql).first()
         if row is not None:
-            print('yes')
-
+            # print('User password is correct')
             session['logged_in'] = True
-            return redirect(url_for('users'))
+            flash('Welcome. You are logged in.')
+            return redirect(url_for('index'))
         else:
-            error = "Wrong username or password."
-
-        
-
-    #     return redirect(next or url_for('index'))
+            flash('Incorrect username or password. Please try again.')
+            return redirect(url_for('login'))
     return render_template('login.html', form=form)
-    # return 'ok'
-    
+
+
+@flaskapp.route("/logout")
+def logout():
+    session['logged_in'] = False
+    print('session.get("logged_in") = ', session.get('logged_in'))
+    flash('You have logged out.')
+    return render_template('index.html', form=LoginForm())  
 
 @flaskapp.route('/users')
-#@login_required
+
 def users():
-    ###
-    ### Should I use psycopg2 instead of Python records? records has almost no documentation.
-    ###
-    DATABASE_URL=os.environ['DATABASE_URL']
-    db = records.Database(DATABASE_URL)
+    # Login required
+    if not session.get('logged_in'):
+        flash('Please log in to view that page.')
+        return render_template('login.html', form=LoginForm())
+
     username = 'johndoe'
+
+    # sql = 'SELECT * from users'
 
     # sql =   """ 
     #         SELECT username, first_name, last_name, email, phone, user_status, start_time 
@@ -68,55 +74,38 @@ def users():
     #         WHERE username = '{}'
     #         """.format(
     #         username)
-
     sql =   """ 
             SELECT username, first_name, last_name, email, phone, user_status, DATE(start_time) 
             FROM users
             """
 
-    # sql = 'SELECT * from users'
-
-    # How do I handle it if there are no records?
     rows = db.query(sql)
-    
-    # print('SQL:')
-    # print(sql)
-    
-    # for r in rows:
-    #     colnames = r.keys()
     
     return render_template('users.html', title='Users', recordset=rows)
 
 
-## Make a page that lets me enter data in a simple table.
 @flaskapp.route('/notes', methods=['GET', 'POST'])
 def notes():
-    form = NotesForm()
-
-    DATABASE_URL=os.environ['DATABASE_URL']
-    db = records.Database(DATABASE_URL)
+    """Logic for the notes page."""
+    if not session.get('logged_in'):
+        flash('Please log in to view that page.')
+        return render_template('login.html', form=LoginForm())
 
     # Let the user enter a new note into the database.
     if request.method == 'POST':
         note = request.form['note']
         #note = 'Test'
 
-        # $$: Dollar quoting:
-        # https://www.postgresql.org/docs/current/static/sql-syntax-lexical.html#SQL-SYNTAX-DOLLAR-QUOTING
-        # Allows single quotes in an insert.
-        ### Make sure no SQL injection, though.
         insert_sql ="""
                 INSERT INTO notes (note) VALUES ($${}$$)
                 """.format(
                 note)
         
         print(insert_sql)
-        #print(json.dumps(insert_sql))
-
-        ### Prevent 'None' from being entered into the database. The user needs to add input before submitting.
+        # To Do: Prevent empty insert.
         db.query(insert_sql)
 
-        # Redirect so the user see an empty form after submitting a note.
+        # Redirect so the user sees an empty form after submitting a note.
         if form.validate_on_submit():
             return redirect(url_for('notes'))
 
@@ -124,14 +113,8 @@ def notes():
     select_sql ="""
             SELECT note FROM notes
             """
-    print(select_sql)
+    # print(select_sql)
 
     rows = db.query(select_sql)
-    # db.close()
-
-    # for r in rows:
-    #     colnames = r.keys()
-    #     values = r.values()
-    #     print(colnames, values)
     
-    return render_template('notes.html', title='Notes', form=form, recordset=rows)
+    return render_template('notes.html', title='Notes', form=NotesForm(), recordset=rows)
