@@ -3,11 +3,9 @@
 from flask import (
   Flask, render_template, request, flash, redirect, url_for, session
 )
-#from flask import Flask, render_template, request
 from app import flaskapp
 import os
 import records
-import json
 from app.forms import LoginForm, NotesForm # Be sure to import each form you define in forms.py.
 
 @flaskapp.route('/')
@@ -15,12 +13,47 @@ from app.forms import LoginForm, NotesForm # Be sure to import each form you def
 def index():
     return render_template('index.html')
 
-@flaskapp.route('/login', methods=["GET", "POST"])
+@flaskapp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    return render_template('login.html', title='Sign In', form=form)
+
+    DATABASE_URL=os.environ['DATABASE_URL']
+    db = records.Database(DATABASE_URL)
+    
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        print('method is POST')
+        print('username: ', username, 'password: ', password)
+
+        sql =   """ 
+            SELECT username, user_password 
+            FROM users
+            WHERE username = $${}$$ AND user_password = crypt('{}', user_password);
+            """.format(
+            username, password)
+            
+        print(sql)
+
+        row = db.query(sql).first()
+        if row is not None:
+            print('yes')
+
+            session['logged_in'] = True
+            return redirect(url_for('users'))
+        else:
+            error = "Wrong username or password."
+
+        
+
+    #     return redirect(next or url_for('index'))
+    return render_template('login.html', form=form)
+    # return 'ok'
+    
 
 @flaskapp.route('/users')
+#@login_required
 def users():
     ###
     ### Should I use psycopg2 instead of Python records? records has almost no documentation.
@@ -46,11 +79,9 @@ def users():
     # How do I handle it if there are no records?
     rows = db.query(sql)
     
-    print('SQL:')
-    print(sql)
-    print('rows:')
-    print(rows)
-
+    # print('SQL:')
+    # print(sql)
+    
     # for r in rows:
     #     colnames = r.keys()
     
@@ -58,7 +89,7 @@ def users():
 
 
 ## Make a page that lets me enter data in a simple table.
-@flaskapp.route('/notes', methods=["GET", "POST"])
+@flaskapp.route('/notes', methods=['GET', 'POST'])
 def notes():
     form = NotesForm()
 
