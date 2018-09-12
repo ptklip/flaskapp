@@ -74,7 +74,7 @@ DROP TABLE IF EXISTS etl_job_schedule;
 
 CREATE TABLE etl_job_schedule (
     id          SERIAL,
-    job_id      INT
+    job_id      INT,
     frequency   TEXT,
     weekdays    BOOLEAN,
     weekends    BOOLEAN,

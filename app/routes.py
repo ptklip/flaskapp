@@ -7,17 +7,31 @@ import os
 import records
 #https://docs.python.org/3/howto/logging-cookbook.html
 import logging
-#import auxiliary_module -- Caused error. What is this module?
 from app import flaskapp
 from app.forms import LoginForm, NotesForm # Import each form defined in forms.py.
 
 DATABASE_URL=os.environ['DATABASE_URL']
 db = records.Database(DATABASE_URL)
 
+logger = logging.getLogger('flaskapp')
+logger.setLevel(logging.DEBUG)
+# Create file handler which logs even debug messages
+fh = logging.FileHandler('flaskapp.log')
+fh.setLevel(logging.DEBUG)
+# Create console handler with a higher log level
+ch = logging.StreamHandler()
+ch.setLevel(logging.ERROR)
+# Create formatter and add it to the handlers
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+fh.setFormatter(formatter)
+ch.setFormatter(formatter)
+# Add the handlers to the logger
+logger.addHandler(fh)
+logger.addHandler(ch)
+
 @flaskapp.route('/')
 @flaskapp.route('/index')
 def index():
-    """Logic for the index page."""
     print('session.get("logged_in") = ', session.get('logged_in'))
     return render_template('index.html')
 
@@ -43,7 +57,9 @@ def login():
         if row is not None:
             # print('User password is correct')
             session['logged_in'] = True
-            flash('Welcome. You are logged in.')
+            username = row['username']
+            logger.info('A user has logged in: {}'.format(username))
+            flash('Welcome, {}. You are logged in.'.format(username))
             return redirect(url_for('index'))
         else:
             flash('Incorrect username or password. Please try again.')
