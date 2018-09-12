@@ -1,4 +1,8 @@
-This is a project to learn Flask.
+This is a Python Flask project:
+
+Work on Flask techniques
+
+Perform web scraping, ETL, etc.
 
 How to
 ------
@@ -9,15 +13,21 @@ set FLASK_APP=flaskapp
 set FLASK_ENV=development
 flask run
 
+Run the app interactively:
+
+flask shell
+
+Run in Gunicorn:
+
+pip install gunicorn
+gunicorn --workers=2 --bind=0.0.0.0:8000 app:flaskapp
+
+
 See all environmental variables in Windows:
 
 env
 
 To do:
-
-- Add logging
-
-- Add roles
 
 - Get data from SQL Server and insert into PostgreSQL
    
@@ -27,7 +37,6 @@ To do:
         - Create PostgreSQL table to hold the data
         - Insert the rows in PostgreSQL.
 
-- Get data from the web and insert into PostgreSQL
-
 - Let logged in users see these ETL jobs and status information.
 
+- Etc.
