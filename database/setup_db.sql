@@ -81,6 +81,41 @@ CREATE TABLE etl_job_schedule (
     holidays    BOOLEAN
 );
 
+DROP TABLE IF EXISTS batting_stats_current_season_staging;
+
+CREATE TABLE batting_stats_current_season_staging (
+    id                          SERIAL,
+    position                    TEXT,
+    player_name                 TEXT,
+    age                         INT,
+    games_played                INT,
+    plate_appearences           INT,
+    at_bats                     INT,
+    runs_scored                 INT,
+    hits                        INT,
+    doubles                     INT,
+    triples                     INT,
+    home_runs                   INT,
+    runs_batted_in              INT,
+    stolen_bases                INT,
+    caught_stealing             INT,
+    bases_on_balls              INT,
+    strike_outs                 INT,
+    batting_average             NUMERIC (8, 3),
+    on_base_percentage          NUMERIC (8, 3),
+    slugging_percentage         NUMERIC (8, 3),
+    on_base_plus_slugging       NUMERIC (8, 3),
+    on_base_percentage_plus     NUMERIC (8, 3),
+    total_bases                 INT,
+    grounded_into_double_play   INT,
+    hit_by_pitch                INT,
+    sacrifice_hits              INT,
+    sacrifice_flies             INT,
+    intentional_bases_on_balls  INT
+);
+
+CREATE UNIQUE INDEX batting_stats_current_season_staging_unique_idx ON batting_stats_current_season_staging (player_name);
+
 DROP TABLE IF EXISTS batting_stats_current_season;
 
 CREATE TABLE batting_stats_current_season (
@@ -111,8 +146,11 @@ CREATE TABLE batting_stats_current_season (
     hit_by_pitch                INT,
     sacrifice_hits              INT,
     sacrifice_flies             INT,
-    intentional_bases_on_balls  INT
+    intentional_bases_on_balls  INT,
+    insert_date                 DATE NOT NULL
 );
+
+CREATE UNIQUE INDEX batting_stats_current_season_unique_idx ON batting_stats_current_season (player_name, insert_date);
 
 DROP TABLE IF EXISTS dim_date;
 
