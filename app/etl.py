@@ -64,7 +64,7 @@ def red_sox_batting_stats():
     conn = engine.raw_connection()
     cur = conn.cursor()
 
-    # Truncate staging table.
+    # Truncate the staging table.
     sql = """
     TRUNCATE TABLE batting_stats_current_season_staging
     """
@@ -72,18 +72,19 @@ def red_sox_batting_stats():
     cur.execute(sql)
     conn.commit()
 
-    # Insert the DataFrame into PostgreSQL
+    # Insert the DataFrame into the PostgreSQL staging table.
     output = io.StringIO()
     df.to_csv(output, sep='\t', header=False, index=True)
     output.seek(0)
     cur.copy_from(output, 'batting_stats_current_season_staging')
     conn.commit()
 
-    # Check row count.
-
-    # Row count should be with 75% of previous rowcount.
+    # TO DO:
+    # Check the row count.
+    # The row count should be with 75% of previous rowcount.
     # If False, stop and alert.
     # If true, proceed.
+    # Log ETL metadata to  database table.
 
     # Insert into main table with select from staging table.
     sql = """
